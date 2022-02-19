@@ -15,14 +15,6 @@ public class PlaintextToHtmlConverter {
         this.matcherHTMLS = matcherHTMLS;
     }
 
-    public PlaintextToHtmlConverter(){
-        matcherHTMLS.add(new LessMatcher());
-        matcherHTMLS.add(new GtMatcher());
-        matcherHTMLS.add(new AmpMatcher());
-        matcherHTMLS.add(new NewLineMatcher());
-        matcherHTMLS.add(new DefaultMatcher());
-    }
-
     public String toHtml() throws Exception {
         String text = read();
         return basicHtmlEncode(text);

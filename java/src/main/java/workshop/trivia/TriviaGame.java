@@ -2,8 +2,12 @@ package workshop.trivia;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class TriviaGame {
+
+    List<TypeSetter> typeSetters = new ArrayList<>();
+
     ArrayList players = new ArrayList();
     int[] places = new int[6];
     int[] purses = new int[6];
@@ -13,6 +17,8 @@ public class TriviaGame {
     LinkedList scienceQuestions = new LinkedList();
     LinkedList sportsQuestions = new LinkedList();
     LinkedList rockQuestions = new LinkedList();
+
+    Questions questions = new Questions();
 
     int currentPlayer = 0;
     boolean isGettingOutOfPenaltyBox;
@@ -24,6 +30,10 @@ public class TriviaGame {
             sportsQuestions.addLast(("Sports Question " + i));
             rockQuestions.addLast(createRockQuestion(i));
         }
+        typeSetters.add(new TypePop());
+        typeSetters.add(new TypeScience());
+        typeSetters.add(new TypeSports());
+        typeSetters.add(new TypeRock());
     }
 
     public String createRockQuestion(int index) {
@@ -99,64 +109,42 @@ public class TriviaGame {
 
 
     private String currentCategory() {
-        if (places[currentPlayer] == 0) return "Pop";
-        if (places[currentPlayer] == 4) return "Pop";
-        if (places[currentPlayer] == 8) return "Pop";
-        if (places[currentPlayer] == 1) return "Science";
-        if (places[currentPlayer] == 5) return "Science";
-        if (places[currentPlayer] == 9) return "Science";
-        if (places[currentPlayer] == 2) return "Sports";
-        if (places[currentPlayer] == 6) return "Sports";
-        if (places[currentPlayer] == 10) return "Sports";
+        for (TypeSetter setter: typeSetters) {
+            if(setter.check(places[currentPlayer])) return setter.response();
+        }
         return "Rock";
     }
 
+    private void periodCorrect(){
+        announce("Answer was correct!!!!");
+        announce(players.get(currentPlayer) + " now has " + purses[currentPlayer] + " Gold Coins.");
+    }
+
+    private void changePlayer(){
+        currentPlayer++;
+        if (currentPlayer == players.size()) currentPlayer = 0;
+    }
+
     public boolean wasCorrectlyAnswered() {
-        if (inPenaltyBox[currentPlayer]) {
-            if (isGettingOutOfPenaltyBox) {
-                announce("Answer was correct!!!!");
-                purses[currentPlayer]++;
-                announce(players.get(currentPlayer)
-                        + " now has "
-                        + purses[currentPlayer]
-                        + " Gold Coins.");
-
-                boolean winner = didPlayerWin();
-                currentPlayer++;
-                if (currentPlayer == players.size()) currentPlayer = 0;
-
-                return winner;
-            } else {
-                currentPlayer++;
-                if (currentPlayer == players.size()) currentPlayer = 0;
-                return true;
-            }
-
-
-        } else {
-
-            announce("Answer was correct!!!!");
-            purses[currentPlayer]++;
-            announce(players.get(currentPlayer)
-                    + " now has "
-                    + purses[currentPlayer]
-                    + " Gold Coins.");
-
-            boolean winner = didPlayerWin();
-            currentPlayer++;
-            if (currentPlayer == players.size()) currentPlayer = 0;
-
-            return winner;
+        purses[currentPlayer]++;
+        periodCorrect();
+        changePlayer();
+        if(inPenaltyBox[currentPlayer] && isGettingOutOfPenaltyBox) {
+            return didPlayerWin();
         }
+        else changePlayer();
+        return true;
+    }
+
+    private void periodWrong(){
+        announce("Question was incorrectly answered");
+        announce(players.get(currentPlayer) + " was sent to the penalty box");
     }
 
     public boolean wrongAnswer() {
-        announce("Question was incorrectly answered");
-        announce(players.get(currentPlayer) + " was sent to the penalty box");
         inPenaltyBox[currentPlayer] = true;
-
-        currentPlayer++;
-        if (currentPlayer == players.size()) currentPlayer = 0;
+        periodWrong();
+        changePlayer();
         return true;
     }
 
