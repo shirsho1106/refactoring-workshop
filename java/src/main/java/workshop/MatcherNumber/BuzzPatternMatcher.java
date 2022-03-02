@@ -8,7 +8,7 @@ public class BuzzPatternMatcher implements PatternMatcher{
     }
 
     @Override
-    public String generateRresponse() {
+    public String generateResponse() {
         return "Buzz";
     }
 }

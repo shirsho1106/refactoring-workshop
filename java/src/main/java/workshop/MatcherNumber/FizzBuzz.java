@@ -11,8 +11,8 @@ import java.util.List;
  * For numbers which are factors of both three and five print FizzBuzz instead of the number
  */
 public class FizzBuzz {
-    private List<PatternMatcher> patternMatchers;
-    private PatternMatcher nullObjectPattern;
+    private final List<PatternMatcher> patternMatchers;
+    private final PatternMatcher nullObjectPattern;
     public FizzBuzz(List<PatternMatcher> patternMatchers, PatternMatcher nullObjectPattern) {
         super();
         this.patternMatchers = patternMatchers;
@@ -20,13 +20,13 @@ public class FizzBuzz {
     }
 
     public String say(int number) {
-        StringBuilder strReturn = new StringBuilder(nullObjectPattern.generateRresponse());
+        StringBuilder strReturn = new StringBuilder(nullObjectPattern.generateResponse());
 
         for (PatternMatcher patternMatcher : patternMatchers) {
-            if (patternMatcher.matches(number)) strReturn.append(patternMatcher.generateRresponse());
+            if (patternMatcher.matches(number)) strReturn.append(patternMatcher.generateResponse());
         }
 
-        if(strReturn.toString().equals(nullObjectPattern.generateRresponse())) return String.valueOf(number);
+        if(strReturn.toString().equals(nullObjectPattern.generateResponse())) return String.valueOf(number);
         else return strReturn.toString();
     }
 }

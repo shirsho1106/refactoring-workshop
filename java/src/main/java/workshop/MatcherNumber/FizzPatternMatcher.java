@@ -8,10 +8,9 @@ public class FizzPatternMatcher implements PatternMatcher{
     }
 
     @Override
-    public String generateRresponse() {
+    public String generateResponse() {
         return "Fizz";
     }
-
 
 }
 

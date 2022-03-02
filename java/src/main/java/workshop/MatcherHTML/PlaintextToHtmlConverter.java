@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PlaintextToHtmlConverter {
 
-    private List<CharMatcher> charMatchers;
+    private final List<CharMatcher> charMatchers;
 
     public PlaintextToHtmlConverter(List<CharMatcher> charMatchers) {
         this.charMatchers = charMatchers;
@@ -42,32 +42,11 @@ public class PlaintextToHtmlConverter {
                 }
         }
 
-        /*for (char characterToConvert : source.toCharArray()) {
-            switch (characterToConvert) {
-                case '<':
-                    convertedLine += "&lt;";
-                    break;
-                case '>':
-                    convertedLine += "&gt;";
-                    break;
-                case '&':
-                    convertedLine += "&amp;";
-                    break;
-                case '\n':
-                    addANewLine(result,convertedLine);
-                    break;
-                default:
-                    convertedLine += characterToConvert;
-            }
-        }*/
-
         result = addANewLine(result,convertedLine);
         return String.join("<br />", result);
     }
 
 
-    //stringfy convertedLine array and push into result
-    //reset convertedLine
     private List<String> addANewLine(List<String> result,String convertedLine) {
         result.add(convertedLine);
         return result;

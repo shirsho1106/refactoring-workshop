@@ -1,7 +1,7 @@
 package workshop;
 
 import org.junit.Test;
-import workshop.Trivia.TriviaGame;
+import workshop.Trivia.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +10,16 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class TriviaGameTest {
-    FakeTriviaGame game = new FakeTriviaGame();
+    FakeTriviaGame game;
+    List<Questions> questions = new ArrayList<>();
+
+    public TriviaGameTest() {
+        questions.add(new PopQuestions());
+        questions.add(new RockQuestions());
+        questions.add(new SportsQuestions());
+        questions.add(new ScienceQuestions());
+        this.game = new FakeTriviaGame(questions);
+    }
 
     @Test
     public void correctlyAnswered() {
@@ -35,6 +44,7 @@ public class TriviaGameTest {
 
     @Test
     public void wronglyAnswered() {
+
         game.add("Chet");
         game.add("Pat");
         game.roll(1);
@@ -54,8 +64,12 @@ public class TriviaGameTest {
                 "Chet was sent to the penalty box"), game.getMessages());
     }
 
-    class FakeTriviaGame extends TriviaGame {
+    static class FakeTriviaGame extends TriviaGame {
         List<String> messages = new ArrayList<>();
+
+        public FakeTriviaGame(List<Questions> questions){
+            super(questions);
+        }
 
         @Override
         protected void announce(Object message) {
