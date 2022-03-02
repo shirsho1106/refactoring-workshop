@@ -1,5 +1,7 @@
 package workshop.MatcherNumber;
 
+import workshop.MatcherNumber.PatternMatcher;
+
 import java.util.List;
 
 /**
@@ -8,24 +10,23 @@ import java.util.List;
  * For factor of five print Buzz instead of the number
  * For numbers which are factors of both three and five print FizzBuzz instead of the number
  */
-
 public class FizzBuzz {
-
-    List<PatternMatcher> patternMatchers;
-
-    public FizzBuzz(List<PatternMatcher> patternMatchers) {
+    private List<PatternMatcher> patternMatchers;
+    private PatternMatcher nullObjectPattern;
+    public FizzBuzz(List<PatternMatcher> patternMatchers, PatternMatcher nullObjectPattern) {
+        super();
         this.patternMatchers = patternMatchers;
+        this.nullObjectPattern = nullObjectPattern;
     }
 
     public String say(int number) {
+        StringBuilder strReturn = new StringBuilder(nullObjectPattern.generateRresponse());
 
-        String strReturn = "";
-
-        for (PatternMatcher patternMatcher: patternMatchers) {
-            if(patternMatcher.matches(number)) return patternMatcher.getResponse();
+        for (PatternMatcher patternMatcher : patternMatchers) {
+            if (patternMatcher.matches(number)) strReturn.append(patternMatcher.generateRresponse());
         }
 
-        return strReturn;
-
+        if(strReturn.toString().equals(nullObjectPattern.generateRresponse())) return String.valueOf(number);
+        else return strReturn.toString();
     }
 }

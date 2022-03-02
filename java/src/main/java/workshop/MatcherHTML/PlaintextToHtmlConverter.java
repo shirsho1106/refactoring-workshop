@@ -9,10 +9,10 @@ import java.util.List;
 
 public class PlaintextToHtmlConverter {
 
-    List<MatcherHTML> matcherHTMLS;
+    private List<CharMatcher> charMatchers;
 
-    public PlaintextToHtmlConverter(List<MatcherHTML> matcherHTMLS) {
-        this.matcherHTMLS = matcherHTMLS;
+    public PlaintextToHtmlConverter(List<CharMatcher> charMatchers) {
+        this.charMatchers = charMatchers;
     }
 
     public String toHtml() throws Exception {
@@ -20,29 +20,57 @@ public class PlaintextToHtmlConverter {
         return basicHtmlEncode(text);
     }
 
-    protected String read() throws IOException {
-        Path file = Paths.get("sample.txt");
-        byte[] fileBytes = Files.readAllBytes(file);
-        return new String(fileBytes);
+    public String read() throws IOException {
+        Path filePath = Paths.get("sample.txt");
+        byte[] fileByteArray = Files.readAllBytes(filePath);
+        return new String(fileByteArray);
     }
 
     private String basicHtmlEncode(String source) {
+
         List<String> result = new ArrayList<>();
-        List<String> convertedLine = new ArrayList<>();
+        String convertedLine = "";
 
-        Results results = new Results(result, convertedLine);
-
-        for (char characterToConvert : source.toCharArray()) {
-            for (MatcherHTML matcherHTML : this.matcherHTMLS) {
-                if (matcherHTML.matches(characterToConvert)) {
-                    results = matcherHTML.getResponse(results);
-                }
+        for(char characterToConvert : source.toCharArray()){
+            if(characterToConvert == '\n') {
+                result = addANewLine(result, convertedLine);
+                convertedLine = "";
             }
+            else
+                for(CharMatcher charMatcher : charMatchers){
+                    convertedLine = charMatcher.matchAndConvert(convertedLine,characterToConvert);
+                }
         }
 
-        result = results.getResult();
-        convertedLine = results.getConvertedLine();
+        /*for (char characterToConvert : source.toCharArray()) {
+            switch (characterToConvert) {
+                case '<':
+                    convertedLine += "&lt;";
+                    break;
+                case '>':
+                    convertedLine += "&gt;";
+                    break;
+                case '&':
+                    convertedLine += "&amp;";
+                    break;
+                case '\n':
+                    addANewLine(result,convertedLine);
+                    break;
+                default:
+                    convertedLine += characterToConvert;
+            }
+        }*/
 
+        result = addANewLine(result,convertedLine);
         return String.join("<br />", result);
     }
+
+
+    //stringfy convertedLine array and push into result
+    //reset convertedLine
+    private List<String> addANewLine(List<String> result,String convertedLine) {
+        result.add(convertedLine);
+        return result;
+    }
+
 }

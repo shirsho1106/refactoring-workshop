@@ -1,14 +1,26 @@
 package workshop;
 
 import org.junit.Test;
-import workshop.MatcherHTML.PlaintextToHtmlConverter;
+import workshop.MatcherHTML.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public class HtmlPagesConverterTest {
-    PlaintextToHtmlConverterFake converter = new PlaintextToHtmlConverterFake();
+    List<CharMatcher> charMatchers = new ArrayList<>();
+
+    PlaintextToHtmlConverterFake converter;
+
+    public HtmlPagesConverterTest() {
+        charMatchers.add(new GtSignMatcher());
+        charMatchers.add(new LtSignMatcher());
+        charMatchers.add(new AmpSignMatcher());
+        charMatchers.add(new DefaultMatcher());
+        converter = new PlaintextToHtmlConverterFake(charMatchers);
+    }
 
     @Test
     public void charConversion() throws Exception {
@@ -39,12 +51,19 @@ public class HtmlPagesConverterTest {
 
     static class PlaintextToHtmlConverterFake extends PlaintextToHtmlConverter {
         String text;
+
+        public PlaintextToHtmlConverterFake(List<CharMatcher> charMatchers) {
+            super(charMatchers);
+        }
+
+        @Override
+        public String read() throws IOException {
+            return text;
+        }
+
         protected void setRead(String text) {
             this.text = text;
         }
-        @Override
-        protected String read() throws IOException {
-            return text;
-        }
+
     }
 }

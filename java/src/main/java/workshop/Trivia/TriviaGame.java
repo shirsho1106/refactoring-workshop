@@ -1,13 +1,9 @@
-package workshop.trivia;
+package workshop.Trivia;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 public class TriviaGame {
-
-    List<TypeSetter> typeSetters = new ArrayList<>();
-
     ArrayList players = new ArrayList();
     int[] places = new int[6];
     int[] purses = new int[6];
@@ -17,8 +13,6 @@ public class TriviaGame {
     LinkedList scienceQuestions = new LinkedList();
     LinkedList sportsQuestions = new LinkedList();
     LinkedList rockQuestions = new LinkedList();
-
-    Questions questions = new Questions();
 
     int currentPlayer = 0;
     boolean isGettingOutOfPenaltyBox;
@@ -30,10 +24,6 @@ public class TriviaGame {
             sportsQuestions.addLast(("Sports Question " + i));
             rockQuestions.addLast(createRockQuestion(i));
         }
-        typeSetters.add(new TypePop());
-        typeSetters.add(new TypeScience());
-        typeSetters.add(new TypeSports());
-        typeSetters.add(new TypeRock());
     }
 
     public String createRockQuestion(int index) {
@@ -45,6 +35,7 @@ public class TriviaGame {
     }
 
     public boolean add(String playerName) {
+
 
         players.add(playerName);
         places[howManyPlayers()] = 0;
@@ -109,42 +100,64 @@ public class TriviaGame {
 
 
     private String currentCategory() {
-        for (TypeSetter setter: typeSetters) {
-            if(setter.check(places[currentPlayer])) return setter.response();
-        }
+        if (places[currentPlayer] == 0) return "Pop";
+        if (places[currentPlayer] == 4) return "Pop";
+        if (places[currentPlayer] == 8) return "Pop";
+        if (places[currentPlayer] == 1) return "Science";
+        if (places[currentPlayer] == 5) return "Science";
+        if (places[currentPlayer] == 9) return "Science";
+        if (places[currentPlayer] == 2) return "Sports";
+        if (places[currentPlayer] == 6) return "Sports";
+        if (places[currentPlayer] == 10) return "Sports";
         return "Rock";
     }
 
-    private void periodCorrect(){
-        announce("Answer was correct!!!!");
-        announce(players.get(currentPlayer) + " now has " + purses[currentPlayer] + " Gold Coins.");
-    }
-
-    private void changePlayer(){
-        currentPlayer++;
-        if (currentPlayer == players.size()) currentPlayer = 0;
-    }
-
     public boolean wasCorrectlyAnswered() {
-        purses[currentPlayer]++;
-        periodCorrect();
-        changePlayer();
-        if(inPenaltyBox[currentPlayer] && isGettingOutOfPenaltyBox) {
-            return didPlayerWin();
-        }
-        else changePlayer();
-        return true;
-    }
+        if (inPenaltyBox[currentPlayer]) {
+            if (isGettingOutOfPenaltyBox) {
+                announce("Answer was correct!!!!");
+                purses[currentPlayer]++;
+                announce(players.get(currentPlayer)
+                        + " now has "
+                        + purses[currentPlayer]
+                        + " Gold Coins.");
 
-    private void periodWrong(){
-        announce("Question was incorrectly answered");
-        announce(players.get(currentPlayer) + " was sent to the penalty box");
+                boolean winner = didPlayerWin();
+                currentPlayer++;
+                if (currentPlayer == players.size()) currentPlayer = 0;
+
+                return winner;
+            } else {
+                currentPlayer++;
+                if (currentPlayer == players.size()) currentPlayer = 0;
+                return true;
+            }
+
+
+        } else {
+
+            announce("Answer was correct!!!!");
+            purses[currentPlayer]++;
+            announce(players.get(currentPlayer)
+                    + " now has "
+                    + purses[currentPlayer]
+                    + " Gold Coins.");
+
+            boolean winner = didPlayerWin();
+            currentPlayer++;
+            if (currentPlayer == players.size()) currentPlayer = 0;
+
+            return winner;
+        }
     }
 
     public boolean wrongAnswer() {
+        announce("Question was incorrectly answered");
+        announce(players.get(currentPlayer) + " was sent to the penalty box");
         inPenaltyBox[currentPlayer] = true;
-        periodWrong();
-        changePlayer();
+
+        currentPlayer++;
+        if (currentPlayer == players.size()) currentPlayer = 0;
         return true;
     }
 
