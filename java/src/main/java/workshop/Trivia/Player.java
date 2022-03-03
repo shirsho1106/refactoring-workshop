@@ -5,12 +5,21 @@ public class Player {
     private int place;
     private int purse;
     private boolean inPenaltyBox;
+    private boolean isGettingOutOfPenaltyBox;
 
     public Player(String name) {
         this.name = name;
         this.place = 0;
         this.purse = 0;
         this.inPenaltyBox = false;
+    }
+
+    public boolean isNotGettingOutOfPenaltyBox() {
+        return !isGettingOutOfPenaltyBox;
+    }
+
+    public void setGettingOutOfPenaltyBox(int roll) {
+        isGettingOutOfPenaltyBox = roll%2 != 0;
     }
 
     public String getCategory() {
@@ -46,5 +55,11 @@ public class Player {
 
     public void setInPenaltyBox(boolean inPenaltyBox) {
         this.inPenaltyBox = inPenaltyBox;
+    }
+
+    public Player changePlace(Player currentPlayer, int roll){
+        currentPlayer.setPlace(currentPlayer.getPlace() + roll);
+        if (currentPlayer.getPlace() > 11) currentPlayer.setPlace(currentPlayer.getPlace()-12);
+        return currentPlayer;
     }
 }

@@ -18,7 +18,7 @@ public class TriviaGameTest {
         questions.add(new RockQuestions());
         questions.add(new SportsQuestions());
         questions.add(new ScienceQuestions());
-        this.game = new FakeTriviaGame(questions);
+        this.game = new FakeTriviaGame(questions,50);
     }
 
     @Test
@@ -67,8 +67,8 @@ public class TriviaGameTest {
     static class FakeTriviaGame extends TriviaGame {
         List<String> messages = new ArrayList<>();
 
-        public FakeTriviaGame(List<Questions> questions){
-            super(questions);
+        public FakeTriviaGame(List<Questions> questions, int howManyQuestions){
+            super(questions,howManyQuestions);
         }
 
         @Override

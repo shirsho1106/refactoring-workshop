@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TriviaGame {
+
     private final List<Questions> questions;
     private final ArrayList<Player> players = new ArrayList<>();
     private Player currentPlayer;
-    private boolean isGettingOutOfPenaltyBox;
 
-    public TriviaGame(List<Questions> questions) {
+    public TriviaGame(List<Questions> questions, int howManyQuestions) {
         this.questions = questions;
-        addQuestions();
+        addQuestions(howManyQuestions);
     }
 
     public void add(String playerName) {
@@ -26,8 +26,8 @@ public class TriviaGame {
         announce("They have rolled a " + roll);
 
         if (currentPlayer.isInPenaltyBox()) {
-            isGettingOutOfPenaltyBox = roll%2 != 0;
-            if(!isGettingOutOfPenaltyBox){
+            currentPlayer.setGettingOutOfPenaltyBox(roll);
+            if(currentPlayer.isNotGettingOutOfPenaltyBox()){
                 announce(currentPlayer.getName() + " is not getting out of the penalty box");
                 return;
             }
@@ -50,7 +50,7 @@ public class TriviaGame {
 
     public void wasCorrectlyAnswered() {
         if (currentPlayer.isInPenaltyBox()) {
-            if (!isGettingOutOfPenaltyBox) {
+            if (currentPlayer.isNotGettingOutOfPenaltyBox()) {
                 changePlayer();
                 return;
             }
@@ -59,8 +59,8 @@ public class TriviaGame {
         changePlayer();
     }
 
-    private void addQuestions(){
-        for (int i = 0; i < 50; i++) {
+    private void addQuestions(int howManyQuestions){
+        for (int i = 0; i < howManyQuestions; i++) {
             for(Questions question : questions){
                 question.addQuestion(i);
             }
@@ -82,15 +82,13 @@ public class TriviaGame {
     }
 
     private void changePlace(int roll){
-        currentPlayer.setPlace(currentPlayer.getPlace() + roll);
-        if (currentPlayer.getPlace() > 11) currentPlayer.setPlace(currentPlayer.getPlace()-12);
-        announce(currentPlayer.getName() + "'s new location is "
-                + currentPlayer.getPlace());
+        currentPlayer = currentPlayer.changePlace(currentPlayer,roll);
+        announce(currentPlayer.getName() + "'s new location is " + currentPlayer.getPlace());
         announce("The category is " + currentCategory());
     }
 
     private void changePlayer(){
-        if(players.iterator().hasNext())currentPlayer = players.iterator().next();
+        if(players.iterator().hasNext()) currentPlayer = players.iterator().next();
         else currentPlayer = players.get(0);
     }
 
