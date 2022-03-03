@@ -3,6 +3,17 @@ package workshop.Trivia;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+    * Primitive Obsessions removed
+    * Oddball solution handled
+    * Single responsibility principle implemented
+    * Open for extension, Closed for modification
+    * Duplicate codes handled
+    * Long method extracted
+    * Moved methods and fields
+    * Switches and complicated conditions handle with interfaces
+*/
+
 public class TriviaGame {
 
     private final List<Questions> questions;

@@ -7,6 +7,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+    * Switches handled
+    * Primitive obsessions removed
+*/
+
 public class PlaintextToHtmlConverter {
 
     private final List<CharMatcher> charMatchers;

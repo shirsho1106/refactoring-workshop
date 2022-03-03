@@ -10,9 +10,14 @@ import java.util.List;
  * For factor of five print Buzz instead of the number
  * For numbers which are factors of both three and five print FizzBuzz instead of the number
  */
+/*
+    * Switches and complicated conditions handle with interfaces
+*/
+
 public class FizzBuzz {
     private final List<PatternMatcher> patternMatchers;
     private final PatternMatcher nullObjectPattern;
+
     public FizzBuzz(List<PatternMatcher> patternMatchers, PatternMatcher nullObjectPattern) {
         super();
         this.patternMatchers = patternMatchers;
