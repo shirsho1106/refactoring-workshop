@@ -1,7 +1,7 @@
 package workshop.Trivia;
 
 public class Player {
-    private String name;
+    private final String name;
     private int place;
     private int purse;
     private boolean inPenaltyBox;
